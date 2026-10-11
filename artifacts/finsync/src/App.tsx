@@ -1,12 +1,17 @@
-
+```tsx
 import { useEffect, useRef, type ReactNode } from "react";
 import {
   QueryClient,
   QueryClientProvider,
   useQueryClient,
 } from "@tanstack/react-query";
-import { ClerkProvider, Show, SignIn, SignUp, useClerk } from "@clerk/react";
-import { publishableKeyFromHost } from "@clerk/react/internal";
+import {
+  ClerkProvider,
+  Show,
+  SignIn,
+  SignUp,
+  useClerk,
+} from "@clerk/react";
 import { shadcn } from "@clerk/themes";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { Toaster } from "@/components/ui/toaster";
@@ -44,10 +49,7 @@ const queryClient = new QueryClient({
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
-const clerkPubKey = publishableKeyFromHost(
-  window.location.hostname,
-  import.meta.env.VITE_CLERK_PUBLISHABLE_KEY,
-);
+const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 if (!clerkPubKey) {
   throw new Error("Missing VITE_CLERK_PUBLISHABLE_KEY in .env file");
@@ -341,3 +343,4 @@ function App() {
 }
 
 export default App;
+```
