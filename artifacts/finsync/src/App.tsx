@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, type ReactNode } from "react";
 import {
   QueryClient,
@@ -33,18 +34,24 @@ import {
 import { AppShell, LandingPage } from "@/pages/finsync-shell";
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } },
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
 });
+
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+
 const clerkPubKey = publishableKeyFromHost(
   window.location.hostname,
   import.meta.env.VITE_CLERK_PUBLISHABLE_KEY,
 );
-const clerkProxyUrl = import.meta.env.PROD
-  ? `${window.location.origin}/api/__clerk`
-  : undefined;
-if (!clerkPubKey)
+
+if (!clerkPubKey) {
   throw new Error("Missing VITE_CLERK_PUBLISHABLE_KEY in .env file");
+}
 
 function stripBase(path: string) {
   return basePath && path.startsWith(basePath)
@@ -91,12 +98,15 @@ const clerkAppearance = {
     logoBox: "rounded-lg",
     logoImage: "rounded-lg",
     socialButtonsBlockButton: "border border-[#355141] bg-[#192c21]",
-    formButtonPrimary: "bg-[#55c483] text-[#102016] hover:bg-[#6bd392]",
-    formFieldInput: "bg-[#1a2c22] border-[#3b5a47] text-[#eff8f1]",
+    formButtonPrimary:
+      "bg-[#55c483] text-[#102016] hover:bg-[#6bd392]",
+    formFieldInput:
+      "bg-[#1a2c22] border-[#3b5a47] text-[#eff8f1]",
     footerAction: "border-t border-[#2b4335]",
     dividerLine: "bg-[#355141]",
     alert: "bg-[#332923] border-[#69513a]",
-    otpCodeFieldInput: "bg-[#1a2c22] border-[#3b5a47] text-[#eff8f1]",
+    otpCodeFieldInput:
+      "bg-[#1a2c22] border-[#3b5a47] text-[#eff8f1]",
     formFieldRow: "text-[#dce9df]",
     main: "text-[#eaf4ed]",
   },
@@ -106,8 +116,14 @@ function SignInPage() {
   return (
     <main className="grain flex min-h-[100dvh] items-center justify-center bg-background px-4 py-12">
       <div className="absolute left-7 top-7 flex items-center gap-3 text-foreground">
-        <img src={`${basePath}/logo.svg`} className="h-9 w-9" alt="FINSync" />
-        <span className="font-display font-bold tracking-tight">FINSync</span>
+        <img
+          src={`${basePath}/logo.svg`}
+          className="h-9 w-9"
+          alt="FINSync"
+        />
+        <span className="font-display font-bold tracking-tight">
+          FINSync
+        </span>
       </div>
       <SignIn
         routing="path"
@@ -122,8 +138,14 @@ function SignUpPage() {
   return (
     <main className="grain flex min-h-[100dvh] items-center justify-center bg-background px-4 py-12">
       <div className="absolute left-7 top-7 flex items-center gap-3 text-foreground">
-        <img src={`${basePath}/logo.svg`} className="h-9 w-9" alt="FINSync" />
-        <span className="font-display font-bold tracking-tight">FINSync</span>
+        <img
+          src={`${basePath}/logo.svg`}
+          className="h-9 w-9"
+          alt="FINSync"
+        />
+        <span className="font-display font-bold tracking-tight">
+          FINSync
+        </span>
       </div>
       <SignUp
         routing="path"
@@ -162,27 +184,33 @@ function ClerkQueryClientCacheInvalidator() {
   const { addListener } = useClerk();
   const client = useQueryClient();
   const prevUserIdRef = useRef<string | null | undefined>(undefined);
+
   useEffect(() => {
     const unsubscribe = addListener(({ user }) => {
       const userId = user?.id ?? null;
+
       if (
         prevUserIdRef.current !== undefined &&
         prevUserIdRef.current !== userId
-      )
+      ) {
         client.clear();
+      }
+
       prevUserIdRef.current = userId;
     });
+
     return unsubscribe;
   }, [addListener, client]);
+
   return null;
 }
 
 function RouterContent() {
   const [, setLocation] = useLocation();
+
   return (
     <ClerkProvider
       publishableKey={clerkPubKey}
-      proxyUrl={clerkProxyUrl}
       appearance={clerkAppearance}
       signInUrl={`${basePath}/sign-in`}
       signUpUrl={`${basePath}/sign-up`}
@@ -201,7 +229,9 @@ function RouterContent() {
         },
       }}
       routerPush={(to) => setLocation(stripBase(to))}
-      routerReplace={(to) => setLocation(stripBase(to), { replace: true })}
+      routerReplace={(to) =>
+        setLocation(stripBase(to), { replace: true })
+      }
     >
       <QueryClientProvider client={queryClient}>
         <ClerkQueryClientCacheInvalidator />
@@ -209,6 +239,7 @@ function RouterContent() {
           <Route path="/" component={HomeRedirect} />
           <Route path="/sign-in/*?" component={SignInPage} />
           <Route path="/sign-up/*?" component={SignUpPage} />
+
           <Route path="/dashboard">
             <Protected>
               <AppShell>
@@ -216,6 +247,7 @@ function RouterContent() {
               </AppShell>
             </Protected>
           </Route>
+
           <Route path="/transactions">
             <Protected>
               <AppShell>
@@ -223,6 +255,7 @@ function RouterContent() {
               </AppShell>
             </Protected>
           </Route>
+
           <Route path="/budget">
             <Protected>
               <AppShell>
@@ -230,6 +263,7 @@ function RouterContent() {
               </AppShell>
             </Protected>
           </Route>
+
           <Route path="/savings">
             <Protected>
               <AppShell>
@@ -237,6 +271,7 @@ function RouterContent() {
               </AppShell>
             </Protected>
           </Route>
+
           <Route path="/commitments">
             <Protected>
               <AppShell>
@@ -244,6 +279,7 @@ function RouterContent() {
               </AppShell>
             </Protected>
           </Route>
+
           <Route path="/subscriptions">
             <Protected>
               <AppShell>
@@ -251,6 +287,7 @@ function RouterContent() {
               </AppShell>
             </Protected>
           </Route>
+
           <Route path="/simulator">
             <Protected>
               <AppShell>
@@ -258,6 +295,7 @@ function RouterContent() {
               </AppShell>
             </Protected>
           </Route>
+
           <Route path="/insights">
             <Protected>
               <AppShell>
@@ -265,6 +303,7 @@ function RouterContent() {
               </AppShell>
             </Protected>
           </Route>
+
           <Route path="/notifications">
             <Protected>
               <AppShell>
@@ -272,6 +311,7 @@ function RouterContent() {
               </AppShell>
             </Protected>
           </Route>
+
           <Route path="/settings">
             <Protected>
               <AppShell>
@@ -279,6 +319,7 @@ function RouterContent() {
               </AppShell>
             </Protected>
           </Route>
+
           <Route component={NotFound} />
         </Switch>
       </QueryClientProvider>
