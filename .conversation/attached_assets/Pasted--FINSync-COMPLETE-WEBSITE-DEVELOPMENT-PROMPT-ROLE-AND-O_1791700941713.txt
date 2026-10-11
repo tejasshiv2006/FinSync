@@ -1,0 +1,1081 @@
+# FINSync — COMPLETE WEBSITE DEVELOPMENT PROMPT
+
+## ROLE AND OBJECTIVE
+
+Act as an expert full-stack web developer, fintech product designer, database architect, cybersecurity engineer, and QA tester.
+
+Build a complete, functional, modern personal finance management website called **FinSync**.
+
+**Brand name:** FinSync
+**Tagline:** Every Decision Connected.
+**Product category:** Personal Finance Intelligence and Budget Simulation
+**Primary challenge:** Manage ₹10,000 over 30 days
+**Target audience:** Gen Z, college students, young professionals, and beginners learning financial management.
+
+This must be a working full-stack website, not just a landing page or static UI prototype.
+
+Implement the frontend, backend, authentication, database, financial calculation engine, API routes, data validation, security, charts, interactive features, automated tests, and deployment configuration.
+
+Build the complete project directly in the Replit workspace. Create the necessary files, install dependencies, run database migrations, execute tests, fix errors, and verify functionality.
+
+Do not stop after producing the initial interface.
+
+---
+
+# 1. CORE PRODUCT CONCEPT
+
+FinSync helps users manage a limited budget and understand the consequences of financial decisions before spending money.
+
+The website must connect all these financial elements:
+
+* Starting budget.
+* Income.
+* Current balance.
+* Spendable balance.
+* Recorded expenses.
+* Essential commitments.
+* Daily allowance.
+* Savings goals.
+* Recurring subscriptions.
+* Unexpected expenses.
+* Financial risk.
+* Financial health.
+* Projected month-end balance.
+* Future financial commitments.
+
+The signature feature is an interactive **What-If Financial Simulator**.
+
+When a user considers buying something, changing a subscription, increasing savings, or dealing with an unexpected expense, the website must instantly preview how that decision affects all dependent financial metrics.
+
+Example:
+
+A user starts with ₹10,000 and simulates a purchase of ₹2,500.
+
+The simulator must calculate the hypothetical balance of ₹7,500 before other adjustments, then recalculate the complete financial plan, including daily allowance, savings feasibility, upcoming commitments, month-end forecast, financial risk, and financial health.
+
+The preview must not change actual transactions until the user explicitly confirms and applies the decision.
+
+All figures must use Indian rupees (₹) and Indian number formatting.
+
+# 2. TECHNOLOGY STACK
+
+Use a reliable, maintainable full-stack architecture.
+
+Frontend:
+
+* React.
+* TypeScript.
+* Vite.
+* Tailwind CSS.
+* shadcn/ui or equivalent accessible components.
+* Lucide React icons.
+* Recharts for charts.
+* React Hook Form.
+* Zod for input validation.
+* TanStack Query or equivalent for server-state management.
+
+Backend:
+
+* Node.js.
+* TypeScript.
+* Express.js.
+* REST API.
+* Centralized error handling.
+* Server-side validation and authorization.
+
+Database:
+
+* Replit PostgreSQL.
+* Drizzle ORM.
+* Version-controlled SQL migrations.
+* Foreign keys, unique constraints, indexes, and transactions.
+
+Authentication:
+
+* Use Replit's supported authentication option or a maintained authentication provider compatible with the deployment environment.
+* Verify that the selected provider and its required SDKs are actually available before implementing the integration.
+* Implement secure registration or provider-based sign-in, logout, session persistence, protected pages, and account management.
+* If using email/password authentication, use a maintained authentication library or provider, secure password hashing, verified email flows where available, and secure session handling.
+* Never simulate authentication by merely hiding or displaying frontend elements.
+
+Deployment:
+
+* Configure the website to run inside Replit.
+* Use Replit Secrets for environment variables and credentials.
+* Provide a working development command and production start command.
+* Configure a health-check endpoint.
+* Document deployment steps.
+
+Do not replace the database with localStorage or hardcoded JSON. PostgreSQL must be the persistent source of truth for financial records.
+
+# 3. BRANDING AND UI DESIGN
+
+Create a visually premium fintech website that feels like a real consumer-facing product.
+
+Design style:
+
+* Modern fintech.
+* Minimal and elegant.
+* Dark forest-green and emerald theme.
+* Near-black backgrounds.
+* Soft green accents.
+* Subtle gradients and glass-like surfaces used sparingly.
+* Rounded cards.
+* Fine borders.
+* Premium typography.
+* Clean charts.
+* Smooth micro-interactions.
+* Consistent spacing.
+* Accessible contrast.
+
+Suggested colors:
+
+* Main background: #0B1110.
+* Card background: #121C19.
+* Primary accent: #8BF5B4.
+* Secondary accent: #55C99A.
+* Main text: #F3F7F4.
+* Muted text: #A3B2AA.
+* Warning: amber.
+* Critical risk: red.
+
+Use a simple FinSync logo built around connected circles, an orbital symbol, or a synchronization icon.
+
+The brand name must appear consistently in the landing page, navigation, dashboard, browser title, and favicon.
+
+The overall experience must resemble a polished startup product, not a generic admin template.
+
+Implement:
+
+* Responsive sidebar.
+* Top navigation.
+* Profile menu.
+* Notification dropdown.
+* Accessible forms.
+* Loading skeletons.
+* Toast notifications.
+* Confirmation dialogs.
+* Helpful empty states.
+* Clear success and error messages.
+* Responsive data tables.
+* Interactive charts.
+* Mobile navigation.
+* Keyboard-accessible controls.
+
+The website must work well on desktop, tablet, and mobile browsers.
+
+Avoid excessive animations, unnecessary decorations, and elements that look interactive but have no functionality.
+
+# 4. REQUIRED PUBLIC WEBSITE
+
+Build a premium public landing page.
+
+Sections:
+
+1. Navigation with logo, features, and sign-in/sign-up actions.
+2. Hero section introducing FinSync.
+3. Headline: "Don't Just Track Money. Simulate Your Future."
+4. Explain the ₹10,000 / 30-day challenge.
+5. Interactive product preview using reusable UI components.
+6. Feature section showing financial decision simulation.
+7. Financial health and risk explanation.
+8. Savings and commitment management section.
+9. How FinSync works.
+10. Privacy and security section.
+11. Clear registration call to action.
+12. Footer with relevant links.
+
+Use persuasive but honest product messaging. Do not claim real bank integrations, AI predictions, regulatory compliance, or security certifications unless genuinely implemented and verified.
+
+All navigation links and buttons must work.
+
+# 5. AUTHENTICATION AND ACCOUNT SECURITY
+
+Implement real, persistent authentication.
+
+Required functionality:
+
+* Sign up or supported identity-provider sign-in.
+* Login.
+* Logout.
+* Session persistence after browser refresh.
+* Protected dashboard routes.
+* Secure session expiration and revocation.
+* Account settings.
+* Password reset and email verification if supported by the selected authentication method.
+* Appropriate handling of invalid credentials and expired sessions.
+* Account deletion with confirmation.
+
+On successful registration, create the user's profile and guide them through onboarding.
+
+Never:
+
+* Store plaintext passwords.
+* Store session secrets in frontend code.
+* Hardcode working credentials.
+* Trust a user ID supplied by the browser.
+* expose authentication tokens in logs.
+* allow users to bypass authentication by modifying frontend state.
+
+Use secure, HttpOnly cookies where cookie-based sessions are used. Configure appropriate Secure and SameSite attributes and CSRF protection when required by the authentication architecture.
+
+Use HTTPS in production.
+
+# 6. ONBOARDING EXPERIENCE
+
+After login, show an onboarding wizard.
+
+Collect:
+
+* Display name.
+* Challenge starting date.
+* Challenge duration, default 30 days.
+* Starting budget, default ₹10,000.
+* Optional planned income.
+* Savings target, default ₹2,000.
+* Essential expenses.
+* Fixed commitments.
+* Optional emergency reserve target.
+
+Allow the user to edit these settings later.
+
+Explain that FinSync uses simulated money for planning and education. It is not a bank, does not execute payments, and does not require real banking credentials.
+
+Allow users to start a new challenge after completing the existing one without silently deleting historical information.
+
+# 7. DATABASE SCHEMA
+
+Use PostgreSQL and Drizzle ORM.
+
+Create and migrate the following tables.
+
+## users
+
+* id: primary key matching the authentication provider's stable user identifier.
+* display_name.
+* email, when available from the provider.
+* currency, default INR.
+* timezone, default Asia/Kolkata.
+* created_at.
+* updated_at.
+
+Avoid duplicating credentials already managed by the authentication provider.
+
+## financial_profiles
+
+* id.
+* user_id: foreign key.
+* challenge_start_date.
+* challenge_duration_days.
+* starting_budget.
+* planned_income.
+* savings_goal.
+* emergency_reserve_target.
+* onboarding_completed.
+* created_at.
+* updated_at.
+
+## transactions
+
+* id.
+* user_id.
+* transaction_type: income, expense, refund, or adjustment.
+* amount.
+* category.
+* description.
+* transaction_date.
+* is_essential.
+* commitment_id, nullable.
+* subscription_id, nullable.
+* created_at.
+* updated_at.
+
+Use precise monetary storage. Use PostgreSQL NUMERIC/DECIMAL or an integer paise representation consistently. Avoid JavaScript floating-point arithmetic for authoritative financial calculations.
+
+Use positive transaction amounts with explicit transaction types and documented accounting rules.
+
+## budget_categories
+
+* id.
+* user_id.
+* name.
+* spending_limit.
+* is_essential.
+* created_at.
+* updated_at.
+
+## commitments
+
+* id.
+* user_id.
+* name.
+* category.
+* amount.
+* due_date.
+* recurrence_type.
+* is_essential.
+* status: planned, paid, or cancelled.
+* created_at.
+* updated_at.
+
+## subscriptions
+
+* id.
+* user_id.
+* name.
+* amount.
+* billing_frequency.
+* next_billing_date.
+* category.
+* status: active, paused, or cancelled.
+* created_at.
+* updated_at.
+
+## savings_goals
+
+* id.
+* user_id.
+* name.
+* target_amount.
+* target_date, nullable.
+* current_contribution.
+* status.
+* created_at.
+* updated_at.
+
+For a stronger audit trail, maintain individual savings contribution records rather than relying exclusively on a mutable total.
+
+## scenarios
+
+* id.
+* user_id.
+* name.
+* scenario_type.
+* scenario_data: validated JSONB.
+* baseline_snapshot: JSONB.
+* projected_results: JSONB.
+* status.
+* created_at.
+* updated_at.
+
+## notifications
+
+* id.
+* user_id.
+* type.
+* title.
+* message.
+* severity.
+* is_read.
+* created_at.
+
+## audit_events
+
+* id.
+* user_id, nullable where appropriate.
+* event_type.
+* entity_type.
+* entity_id.
+* safe_metadata.
+* created_at.
+
+Audit events must be inaccessible to ordinary user mutation endpoints.
+
+Also create appropriate savings contribution and challenge history tables if needed.
+
+Enforce foreign keys, reasonable constraints, indexes, and user-specific uniqueness where appropriate.
+
+Every private record must be owned by an authenticated user.
+
+# 8. FINANCIAL CALCULATION ENGINE
+
+Create one centralized, server-side financial calculation module.
+
+Every screen must use the same calculation rules. Do not hardcode dashboard totals or independently calculate balances in different components.
+
+Implement the following concepts.
+
+## Starting and current balance
+
+Current balance is derived from:
+
+Starting budget + recorded income + recorded refunds + permitted adjustments − recorded expenses.
+
+Apply the documented accounting policy consistently. Count each transaction exactly once.
+
+## Reserved funds
+
+Calculate reserved funds from unpaid essential commitments and other explicitly reserved amounts.
+
+Clearly distinguish:
+
+* Current balance.
+* Reserved funds.
+* Remaining spendable balance.
+
+Never subtract the same commitment twice.
+
+## Daily allowance
+
+Daily allowance is the spendable balance divided by the remaining challenge days, subject to a clearly defined policy.
+
+Use the actual local challenge date to calculate remaining days.
+
+When the challenge expires, display zero remaining days and avoid division-by-zero errors.
+
+Also calculate a recommended discretionary daily budget after considering future essential commitments and savings targets.
+
+## Savings progress
+
+Calculate actual savings contributions relative to the user's target.
+
+Do not count an unconfirmed savings plan as actual savings.
+
+Display the remaining amount and whether the target appears feasible within the available timeframe.
+
+## Forecast
+
+Build a day-by-day forecast for the remaining challenge.
+
+Consider:
+
+* Current balance.
+* Expected income.
+* Planned essential expenses.
+* Future subscription charges.
+* Planned commitments.
+* Expected discretionary spending.
+* Planned savings contributions.
+* Optional unexpected-expense assumptions.
+
+Clearly label forecasts as estimates and show the assumptions behind them.
+
+Recurring items must be projected consistently and must not be duplicated.
+
+## Financial risk engine
+
+Create an explainable, deterministic rules-based risk engine.
+
+Assess:
+
+* Whether the forecast becomes negative.
+* Ability to cover essential commitments.
+* Available emergency reserve.
+* Spending relative to the remaining duration.
+* Upcoming expensive commitments.
+* Savings target feasibility.
+* Recurring payment exposure.
+
+Return:
+
+* Low risk.
+* Moderate risk.
+* High risk.
+* Critical risk.
+
+Show the specific factors producing a risk result and suggest practical actions.
+
+Do not misrepresent this rules engine as a machine-learning model or guarantee future financial outcomes.
+
+## Financial health score
+
+Create a documented score between 0 and 100.
+
+Use configurable weights for:
+
+* Essential expense coverage.
+* Cash-flow sustainability.
+* Spending consistency.
+* Savings progress.
+* Emergency reserve adequacy.
+
+Display individual components and clear explanations.
+
+Ensure scores are understandable and do not penalize users unfairly for having a lower starting budget.
+
+Do not describe this metric as a credit score.
+
+# 9. SIGNATURE FEATURE — WHAT-IF SIMULATOR
+
+Build the most polished and functional part of FinSync around financial decision simulation.
+
+Create an interactive simulator where changes immediately update the projected outcomes.
+
+Support:
+
+* One-time purchase.
+* Unexpected expense.
+* Additional income.
+* New subscription.
+* Subscription cancellation.
+* Changes to recurring expenses.
+* Changes to discretionary spending.
+* Additional savings contributions.
+* Delayed purchase.
+* Comparison between alternative decisions.
+
+Input fields should include:
+
+* Scenario name.
+* Amount.
+* Category.
+* Date.
+* Essential or discretionary designation.
+* Recurrence, where relevant.
+* Optional description.
+
+Display side-by-side baseline and simulated results for:
+
+* Current balance.
+* Projected balance.
+* Spendable balance.
+* Daily allowance.
+* Savings progress.
+* Commitment coverage.
+* Month-end forecast.
+* Financial risk.
+* Financial health score.
+
+Use clear numerical differences and short explanations.
+
+Example:
+
+Baseline:
+
+* Budget: ₹10,000.
+* Simulated purchase: ₹2,500.
+* Projected transaction-adjusted balance: ₹7,500.
+
+All subsequent calculations must use the full plan, including commitments, savings and other recorded transactions.
+
+Include:
+
+* Save scenario.
+* Rename scenario.
+* Compare scenarios.
+* Delete scenario.
+* Reset to current baseline.
+* Confirm and apply decision.
+
+IMPORTANT RULES:
+
+1. Simulation is read-only against actual financial records.
+2. Save scenario assumptions and the calculated result.
+3. Recalculate using the same authoritative server-side engine as the dashboard.
+4. Confirm all financial mutations before applying them.
+5. Apply a decision using a database transaction.
+6. Prevent duplicate applications through idempotency or equivalent transaction-safe controls.
+7. Validate scenario ownership on the server.
+8. Update every dependent metric after the decision is applied.
+9. Display warnings when essential obligations may become unaffordable.
+10. Clearly distinguish actual data from hypothetical data.
+
+A user must be able to test a purchase without accidentally changing their real recorded financial history.
+
+# 10. PROTECTED DASHBOARD
+
+Create a beautiful logged-in dashboard.
+
+The dashboard must display:
+
+Top summary cards:
+
+* Current balance.
+* Spendable balance.
+* Total income.
+* Total expenses.
+* Daily allowance.
+* Days remaining.
+
+Additional sections:
+
+* Savings goal progress.
+* Financial health score.
+* Financial risk.
+* Upcoming commitments.
+* Subscription reminders.
+* Recent transactions.
+* Spending by category.
+* Budget usage.
+* Daily spending trends.
+* Projected balance chart.
+* 30-day forecast.
+* Personalized insights.
+* Quick actions.
+
+Quick-action buttons:
+
+* Add expense.
+* Add income.
+* Create savings goal.
+* Add commitment.
+* Manage subscription.
+* Simulate purchase.
+* View financial report.
+
+Use genuine database-backed data for authenticated users.
+
+Display skeletons during loading, meaningful empty states for new accounts, and useful error handling if the server is unavailable.
+
+# 11. TRANSACTION MANAGEMENT PAGE
+
+Create a complete transaction management interface.
+
+Features:
+
+* Record income and expenses.
+* Edit permitted transaction fields.
+* Delete a transaction with confirmation.
+* Search by description.
+* Filter by date range.
+* Filter by transaction type.
+* Filter by category.
+* Sort by date and amount.
+* Display a paginated transaction list.
+* Show category summaries and charts.
+
+Validate transactions on the server.
+
+Whenever an actual transaction changes, update all dependent financial summaries and forecasts.
+
+Never treat a hypothetical scenario as an actual expense.
+
+# 12. BUDGET PLANNER PAGE
+
+Allow users to establish category-specific budgets, such as:
+
+* Food.
+* Travel.
+* Shopping.
+* Education.
+* Entertainment.
+* Bills.
+* Health.
+* Miscellaneous.
+
+Features:
+
+* Create and edit category limits.
+* Mark categories as essential or discretionary.
+* Show budget usage.
+* Compare actual spending with limits.
+* Warn when a category exceeds its limit.
+* Show spending trends.
+* Update totals when transactions change.
+
+Use meaningful progress bars, charts, and warnings.
+
+# 13. SAVINGS GOALS PAGE
+
+Implement:
+
+* Create a savings goal.
+* Edit target amount and optional target date.
+* Record a contribution.
+* View contribution history.
+* Calculate remaining target amount.
+* Estimate goal feasibility.
+* Display progress charts.
+* Simulate how purchases affect savings.
+* Display goal achievement states.
+
+All contributions must persist in the database.
+
+Apply a consistent policy to avoid double-counting savings as both an expense and a second cash reduction.
+
+Document the chosen policy and use it everywhere.
+
+# 14. COMMITMENTS PAGE
+
+Implement a financial commitment manager for rent, travel, bills, tuition and other obligations.
+
+Features:
+
+* Create commitment.
+* Edit commitment.
+* Mark commitment paid.
+* Cancel a planned commitment.
+* Display overdue commitments.
+* Show upcoming due dates.
+* Distinguish essential and discretionary obligations.
+* Show future financial exposure.
+
+Marking a commitment as paid must safely connect its settlement to a financial transaction or use another explicitly documented accounting workflow.
+
+Prevent repeated confirmation from recording the same payment twice.
+
+# 15. SUBSCRIPTIONS PAGE
+
+Implement:
+
+* Create a subscription.
+* Edit its amount.
+* Change billing frequency.
+* Update the next billing date.
+* Pause a subscription.
+* Cancel a subscription.
+* Resume a subscription if applicable.
+* Display upcoming billing dates.
+* Calculate estimated recurring costs.
+* Show subscription impact on the monthly forecast.
+
+Simulate cancellation before applying it.
+
+Cancelling a subscription must not delete valid historical transactions.
+
+The website must never make real subscription payments.
+
+# 16. UNEXPECTED EXPENSE PLANNER
+
+Create a dedicated page for testing emergencies and unexpected expenses.
+
+Allow users to test different possible costs.
+
+Show the impact on:
+
+* Remaining balance.
+* Spendable balance.
+* Essential commitment coverage.
+* Savings feasibility.
+* Emergency reserve.
+* Daily allowance.
+* Month-end forecast.
+* Financial risk.
+* Financial health.
+
+Let users compare alternative scenarios.
+
+Only save an expense as an actual transaction after explicit confirmation.
+
+# 17. FINANCIAL INSIGHTS PAGE
+
+Create an analytics and insights page featuring:
+
+* Category spending distribution.
+* Daily spending trends.
+* Income-versus-expense comparison.
+* Savings progress.
+* Budget performance.
+* Commitment exposure.
+* Recurring subscription totals.
+* Month-end forecast.
+* Financial risk explanations.
+* Financial health components.
+
+Use Recharts and accessible chart summaries.
+
+Generate useful, transparent rule-based insights such as:
+
+* Your planned spending may exceed your remaining budget.
+* An upcoming commitment reduces your available discretionary money.
+* Your savings target may need a different contribution plan.
+* Cancelling a subscription would reduce expected recurring costs.
+
+Only display recommendations supported by the actual financial calculations.
+
+# 18. NOTIFICATIONS PAGE
+
+Implement notifications for:
+
+* Upcoming essential commitments.
+* Upcoming subscription payments.
+* Low spendable balance.
+* Budget limit exceeded.
+* Savings target at risk.
+* Projected negative balance.
+* Challenge completion.
+
+Features:
+
+* Mark notification as read.
+* Show severity.
+* Navigate to the associated feature.
+* Avoid generating duplicates on every request.
+* Enforce user ownership.
+
+Notifications must be based on actual user data.
+
+# 19. SETTINGS AND ACCOUNT MANAGEMENT
+
+Create settings for:
+
+* Display name.
+* Challenge start date and duration.
+* Starting budget.
+* Savings goal.
+* Emergency reserve.
+* Timezone.
+* Display preferences.
+* Theme.
+* Export personal data.
+* Account deletion.
+* Privacy explanation.
+* Logout.
+
+Allow the user to download a useful CSV export of their own transactions and relevant financial records.
+
+Protect exports with authentication and ownership checks.
+
+Implement account deletion with explicit confirmation and a documented data deletion policy.
+
+# 20. SECURITY IMPLEMENTATION
+
+Security is mandatory.
+
+Implement all applicable safeguards:
+
+Authentication and authorization:
+
+* Protect private pages and API routes.
+* Verify authenticated identity on the server.
+* Check ownership for every record read or modified.
+* Never rely on frontend route protection alone.
+* Use secure cookie and session configurations.
+* Implement session revocation and expiration.
+* Use CSRF protection where required.
+
+Validation:
+
+* Use Zod or equivalent validation for inputs.
+* Validate request bodies, query parameters and route IDs.
+* Reject invalid amounts, unsupported types and malformed identifiers.
+* Use database constraints in addition to server validation.
+* Restrict request sizes and string lengths.
+* Explicitly allowlist writable fields.
+
+Web security:
+
+* Configure Helmet or equivalent security headers.
+* Restrict CORS to legitimate application origins.
+* Add sensible rate limits to login and sensitive mutation endpoints.
+* Prevent SQL injection using parameterized queries.
+* Render untrusted content safely.
+* Guard against cross-site scripting.
+* Handle error responses without revealing internal implementation details.
+* Avoid sensitive financial data in application logs.
+
+Secrets:
+
+* Store database credentials and provider secrets in Replit Secrets.
+* Keep secrets server-side.
+* Do not commit `.env` files containing real values.
+* Include `.env.example` with placeholders only.
+* Never expose secrets through client-side environment variables.
+
+Privacy:
+
+* Do not request bank passwords, card data, UPI PINs, Aadhaar, or PAN.
+* Do not connect real bank accounts.
+* Keep user data isolated.
+* Collect only what is necessary.
+* Protect CSV exports and account deletion.
+* Do not send sensitive user information to an AI provider without an explicitly configured and properly disclosed integration.
+
+Audit:
+
+* Record important financial mutations and security events.
+* Restrict audit-log access.
+* Never expose passwords, tokens or secrets in audit records.
+
+# 21. API DESIGN
+
+Build a structured REST API.
+
+Suggested endpoints:
+
+Profile:
+
+* GET /api/profile
+* PATCH /api/profile
+
+Dashboard:
+
+* GET /api/dashboard
+* GET /api/dashboard/forecast
+* GET /api/dashboard/health
+
+Transactions:
+
+* GET /api/transactions
+* POST /api/transactions
+* PATCH /api/transactions/:id
+* DELETE /api/transactions/:id
+
+Budget:
+
+* GET /api/budget
+* POST /api/budget/categories
+* PATCH /api/budget/categories/:id
+* DELETE /api/budget/categories/:id
+
+Scenarios:
+
+* GET /api/scenarios
+* POST /api/scenarios
+* GET /api/scenarios/:id
+* PATCH /api/scenarios/:id
+* DELETE /api/scenarios/:id
+* POST /api/scenarios/:id/apply
+
+Savings:
+
+* GET /api/savings-goals
+* POST /api/savings-goals
+* PATCH /api/savings-goals/:id
+* POST /api/savings-goals/:id/contributions
+
+Commitments:
+
+* GET /api/commitments
+* POST /api/commitments
+* PATCH /api/commitments/:id
+
+Subscriptions:
+
+* GET /api/subscriptions
+* POST /api/subscriptions
+* PATCH /api/subscriptions/:id
+
+Notifications:
+
+* GET /api/notifications
+* PATCH /api/notifications/:id/read
+
+Account:
+
+* GET /api/export
+* DELETE /api/account
+
+Implement equivalent endpoints if a different naming convention is chosen.
+
+Use appropriate HTTP methods, status codes, error responses, authentication middleware, and validation middleware.
+
+Document the API in the README.
+
+Never trust the frontend to submit the authoritative balance, financial risk score, forecast or health score. Recalculate these on the server.
+
+# 22. AI FEATURE — OPTIONAL
+
+FinSync must work even without an AI API key.
+
+Implement rule-based recommendations as the default.
+
+If a supported AI provider is configured, optionally use it to explain trends or present alternative budget plans.
+
+AI output must never directly modify financial records.
+
+The server-side calculation engine must remain authoritative for all monetary computations, projected results, and financial risk classification.
+
+Do not present generated explanations as guaranteed financial predictions.
+
+# 23. AUTOMATED TESTING
+
+Create automated tests for calculation logic, API behavior, authorization, and data consistency.
+
+Financial tests:
+
+* Initial budget of ₹10,000 is calculated correctly.
+* A ₹2,500 expense gives a ₹7,500 transaction-adjusted balance.
+* Income and refunds are handled correctly.
+* Editing a transaction recalculates the totals.
+* Deleting a transaction recalculates the totals.
+* Daily allowance updates correctly.
+* Zero remaining challenge days do not cause errors.
+* Savings contributions use the documented accounting policy.
+* Commitments are not deducted twice.
+* Subscription cancellation affects future forecasts.
+* Risk changes when essential payments become unaffordable.
+* Invalid amounts are rejected.
+
+Simulator tests:
+
+* Simulation does not mutate actual data.
+* Alternative scenarios produce correct results.
+* Saved scenarios belong to the correct user.
+* Applying a scenario creates the expected records.
+* Duplicate application is prevented.
+* Applying a decision updates dependent metrics.
+
+Security tests:
+
+* Unauthenticated API access is rejected.
+* One user cannot read another user's data.
+* Cross-user modification and deletion are denied.
+* Invalid input is rejected.
+* Secrets and sensitive error details are not exposed.
+* Protected exports require authentication.
+
+Integration tests:
+
+* Authentication flow works with the configured provider.
+* Onboarding persists.
+* Transactions persist after refresh.
+* Dashboard values match stored financial data.
+* Savings goals and commitments update correctly.
+* Subscription changes affect projections.
+* Account deletion follows its documented policy.
+
+Run the tests and correct failures before reporting completion.
+
+# 24. IMPLEMENTATION ORDER
+
+Build the project in the following sequence:
+
+1. Inspect the current Replit workspace and configure the application.
+2. Install and configure dependencies.
+3. Create PostgreSQL database connections.
+4. Create Drizzle schema and migrations.
+5. Implement authentication and authorization.
+6. Build the centralized financial calculation engine.
+7. Write and run unit tests for all calculations.
+8. Implement API routes, input validation and security middleware.
+9. Create reusable UI components and the visual design system.
+10. Build the landing page and onboarding.
+11. Build the dashboard and transaction manager.
+12. Build budgets, savings goals, commitments and subscriptions.
+13. Implement the complete What-If Simulator.
+14. Build financial analytics, forecasts and insights.
+15. Implement notifications and settings.
+16. Add security tests and integration tests.
+17. Fix all discovered runtime and build errors.
+18. Verify actual persistence using PostgreSQL.
+19. Verify that separate accounts cannot access each other's information.
+20. Configure deployment and write the README.
+
+Do not replace unfinished features with nonfunctional buttons, fabricated success messages or hardcoded financial calculations.
+
+If an external credential or provider setup is necessary, identify exactly what is missing and document how to configure it.
+
+# 25. FINAL ACCEPTANCE CRITERIA
+
+The FinSync website is ready for demonstration only when:
+
+* All required pages render successfully.
+* Navigation and buttons work.
+* Authentication uses a real supported provider or secure authentication implementation.
+* PostgreSQL stores user and financial data.
+* User data persists after refresh and a new login.
+* All protected APIs enforce authentication and ownership.
+* Dashboard totals come from persistent data.
+* Financial calculations are centralized and tested.
+* The What-If Simulator genuinely calculates decision impacts.
+* Simulations do not mutate actual records before confirmation.
+* Applying a scenario updates the database safely.
+* Savings goals, commitments, and subscriptions affect the forecast consistently.
+* Financial risk and financial health show understandable explanations.
+* The website works on mobile and desktop.
+* Automated tests pass.
+* Secrets are protected.
+* Replit deployment instructions are complete.
+
+At the end, provide a concise implementation report that identifies:
+
+1. Pages and features completed.
+2. Database and migration status.
+3. Authentication provider and configuration.
+4. Security safeguards implemented.
+5. Tests actually executed and their results.
+6. Any missing setup or limitations.
+7. Exact instructions for running and deploying the website.
+
+**Begin implementing FinSync now. Focus on a fully working website, secure data handling, correct financial calculations and an excellent decision simulator. Do not stop after creating the frontend.**

@@ -1,0 +1,100 @@
+@layer theme, base, clerk, components, utilities;
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+@import 'tailwindcss';
+@import '@clerk/themes/shadcn.css';
+@import 'tw-animate-css';
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --font-sans: var(--app-font-sans);
+  --font-mono: var(--app-font-mono);
+  --radius-lg: var(--radius);
+}
+
+:root, .dark {
+  color-scheme: dark;
+  --background: 156 28% 7%;
+  --foreground: 146 20% 91%;
+  --border: 153 18% 19%;
+  --input: 153 18% 22%;
+  --card: 157 23% 10%;
+  --card-foreground: 146 20% 91%;
+  --primary: 150 56% 48%;
+  --primary-foreground: 156 32% 7%;
+  --secondary: 157 19% 15%;
+  --secondary-foreground: 146 20% 88%;
+  --muted: 157 17% 14%;
+  --muted-foreground: 150 11% 62%;
+  --accent: 151 34% 19%;
+  --accent-foreground: 147 67% 76%;
+  --destructive: 2 62% 57%;
+  --ring: 150 56% 48%;
+  --popover: 157 23% 10%;
+  --popover-foreground: 146 20% 91%;
+  --chart-1: 150 56% 48%;
+  --chart-2: 173 41% 60%;
+  --chart-3: 37 73% 65%;
+  --chart-4: 208 41% 67%;
+  --chart-5: 278 34% 67%;
+  --sidebar: 158 27% 8%;
+  --sidebar-foreground: 146 20% 88%;
+  --sidebar-border: 153 18% 17%;
+  --sidebar-primary: 150 56% 48%;
+  --sidebar-primary-foreground: 156 32% 7%;
+  --sidebar-accent: 153 25% 14%;
+  --sidebar-accent-foreground: 147 67% 76%;
+  --sidebar-ring: 150 56% 48%;
+  --radius: 1rem;
+  --app-font-sans: 'DM Sans', sans-serif;
+  --app-font-display: 'Manrope', sans-serif;
+  --app-font-mono: 'IBM Plex Mono', monospace;
+  --elevate-1: rgba(228, 255, 240, .035);
+  --elevate-2: rgba(228, 255, 240, .07);
+  --button-outline: rgba(220, 255, 236, .12);
+  --badge-outline: rgba(220, 255, 236, .08);
+}
+
+* { box-sizing: border-box; }
+html { min-width: 320px; background: hsl(var(--background)); }
+body {
+  margin: 0; min-height: 100dvh; background: hsl(var(--background)); color: hsl(var(--foreground));
+  font-family: var(--app-font-sans); font-feature-settings: "ss01" on;
+}
+button, input, select, textarea { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+::selection { background: rgba(75, 191, 125, .28); color: #edfff3; }
+.font-display { font-family: var(--app-font-display); }
+.font-data { font-family: var(--app-font-mono); font-variant-numeric: tabular-nums; }
+.panel {
+  background: linear-gradient(145deg, rgba(29, 55, 43, .68), rgba(17, 33, 27, .88));
+  border: 1px solid rgba(149, 190, 164, .13);
+  box-shadow: 0 18px 55px rgba(0,0,0,.12), inset 0 1px 0 rgba(230,255,239,.025);
+}
+.soft-panel { background: rgba(30, 51, 40, .42); border: 1px solid rgba(149,190,164,.11); }
+.eyebrow { letter-spacing: .15em; text-transform: uppercase; font-size: .67rem; font-weight: 700; color: #86aa91; }
+.grain::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: .025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E");
+}
+.enter { animation: arrive .48s cubic-bezier(.2,.75,.25,1) both; }
+@keyframes arrive { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
+.cl-formFieldInput::placeholder { color: #84988a; opacity: 1; }
+.cl-rootBox { width: 100%; }

@@ -3,13 +3,13 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: FinSync personal finance planning API
 servers:
   - url: /api
     description: Base API path
 tags:
-  - name: health
-    description: Health operations
+  - { name: health, description: Health operations }
+  - { name: finance, description: Authenticated personal finance operations }
 paths:
   /healthz:
     get:
@@ -24,7 +24,530 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /profile:
+    get:
+      operationId: getProfile
+      tags: [finance]
+      summary: Get or initialize the current user's profile
+      responses:
+        "200":
+          description: Current profile
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Profile" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    patch:
+      operationId: updateProfile
+      tags: [finance]
+      summary: Update profile and challenge settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProfileUpdate" }
+      responses:
+        "200":
+          description: Updated profile
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Profile" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /dashboard:
+    get:
+      operationId: getDashboard
+      tags: [finance]
+      summary: Get authoritative dashboard metrics and recent records
+      responses:
+        "200":
+          description: Current dashboard summary
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Dashboard" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /transactions:
+    get:
+      operationId: listTransactions
+      tags: [finance]
+      summary: List the current user's transactions
+      parameters:
+        - { name: q, in: query, required: false, schema: { type: string } }
+        - { name: type, in: query, required: false, schema: { type: string, enum: [income, expense, refund, adjustment] } }
+        - { name: category, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string, format: date } }
+        - { name: to, in: query, required: false, schema: { type: string, format: date } }
+        - { name: limit, in: query, required: false, schema: { type: integer, minimum: 1, maximum: 100, default: 50 } }
+        - { name: offset, in: query, required: false, schema: { type: integer, minimum: 0, default: 0 } }
+      responses:
+        "200":
+          description: Transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Transaction" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      operationId: createTransaction
+      tags: [finance]
+      summary: Record income, expense, refund, or adjustment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TransactionInput" }
+      responses:
+        "201":
+          description: Created transaction
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Transaction" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /transactions/{id}:
+    patch:
+      operationId: updateTransaction
+      tags: [finance]
+      summary: Update a transaction
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TransactionUpdate" }
+      responses:
+        "200":
+          description: Updated transaction
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Transaction" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      operationId: deleteTransaction
+      tags: [finance]
+      summary: Delete a transaction
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: Deleted }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /budget/categories:
+    get:
+      operationId: listBudgetCategories
+      tags: [finance]
+      summary: List category budgets with actual spending
+      responses:
+        "200":
+          description: Budget categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/BudgetCategory" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      operationId: createBudgetCategory
+      tags: [finance]
+      summary: Create a category budget
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/BudgetCategoryInput" }
+      responses:
+        "201":
+          description: Created category
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BudgetCategory" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /budget/categories/{id}:
+    patch:
+      operationId: updateBudgetCategory
+      tags: [finance]
+      summary: Update a category budget
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/BudgetCategoryUpdate" }
+      responses:
+        "200":
+          description: Updated category
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BudgetCategory" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      operationId: deleteBudgetCategory
+      tags: [finance]
+      summary: Delete a category budget
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: Deleted }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /savings-goals:
+    get:
+      operationId: listSavingsGoals
+      tags: [finance]
+      summary: List savings goals and contribution progress
+      responses:
+        "200":
+          description: Savings goals
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/SavingsGoal" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      operationId: createSavingsGoal
+      tags: [finance]
+      summary: Create a savings goal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SavingsGoalInput" }
+      responses:
+        "201":
+          description: Created goal
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SavingsGoal" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /savings-goals/{id}:
+    patch:
+      operationId: updateSavingsGoal
+      tags: [finance]
+      summary: Update a savings goal
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SavingsGoalUpdate" }
+      responses:
+        "200":
+          description: Updated goal
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SavingsGoal" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /savings-goals/{id}/contributions:
+    post:
+      operationId: createSavingsContribution
+      tags: [finance]
+      summary: Record a savings allocation without counting it twice as an expense
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SavingsContributionInput" }
+      responses:
+        "201":
+          description: Contribution recorded
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SavingsGoal" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /commitments:
+    get:
+      operationId: listCommitments
+      tags: [finance]
+      summary: List financial commitments
+      responses:
+        "200":
+          description: Commitments
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Commitment" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      operationId: createCommitment
+      tags: [finance]
+      summary: Create a planned commitment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CommitmentInput" }
+      responses:
+        "201":
+          description: Created commitment
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Commitment" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /commitments/{id}:
+    patch:
+      operationId: updateCommitment
+      tags: [finance]
+      summary: Update a commitment or its status
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CommitmentUpdate" }
+      responses:
+        "200":
+          description: Updated commitment
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Commitment" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /commitments/{id}/pay:
+    post:
+      operationId: payCommitment
+      tags: [finance]
+      summary: Settle a commitment exactly once and record its expense
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200":
+          description: Settled commitment
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Commitment" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /subscriptions:
+    get:
+      operationId: listSubscriptions
+      tags: [finance]
+      summary: List recurring subscriptions
+      responses:
+        "200":
+          description: Subscriptions
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Subscription" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      operationId: createSubscription
+      tags: [finance]
+      summary: Create a planned subscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SubscriptionInput" }
+      responses:
+        "201":
+          description: Created subscription
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Subscription" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /subscriptions/{id}:
+    patch:
+      operationId: updateSubscription
+      tags: [finance]
+      summary: Edit, pause, resume, or cancel a planned subscription
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SubscriptionUpdate" }
+      responses:
+        "200":
+          description: Updated subscription
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Subscription" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /scenarios:
+    get:
+      operationId: listScenarios
+      tags: [finance]
+      summary: List saved what-if scenarios
+      responses:
+        "200":
+          description: Saved scenarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Scenario" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      operationId: saveScenario
+      tags: [finance]
+      summary: Save a validated simulation without applying it
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ScenarioInput" }
+      responses:
+        "201":
+          description: Saved scenario and current calculation
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Scenario" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /scenarios/simulate:
+    post:
+      operationId: simulateScenario
+      tags: [finance]
+      summary: Calculate a read-only what-if projection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ScenarioInput" }
+      responses:
+        "200":
+          description: Baseline and hypothetical projections
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ScenarioResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /scenarios/{id}:
+    patch:
+      operationId: updateScenario
+      tags: [finance]
+      summary: Rename a saved scenario
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ScenarioUpdate" }
+      responses:
+        "200":
+          description: Updated scenario
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Scenario" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      operationId: deleteScenario
+      tags: [finance]
+      summary: Delete a saved scenario
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: Deleted }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /scenarios/{id}/apply:
+    post:
+      operationId: applyScenario
+      tags: [finance]
+      summary: Apply a saved purchase or income scenario exactly once
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200":
+          description: Applied scenario
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AppliedScenario" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /notifications:
+    get:
+      operationId: listNotifications
+      tags: [finance]
+      summary: List data-based financial notifications
+      responses:
+        "200":
+          description: Notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Notification" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /notifications/{id}/read:
+    patch:
+      operationId: markNotificationRead
+      tags: [finance]
+      summary: Mark a notification as read
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200":
+          description: Updated notification
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Notification" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /export:
+    get:
+      operationId: exportFinancialData
+      tags: [finance]
+      summary: Export the current user's own finance records
+      responses:
+        "200":
+          description: User-owned data export
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FinancialExport" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
 components:
+  responses:
+    BadRequest:
+      description: Input validation failed
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Unauthorized:
+      description: Sign in is required
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    NotFound:
+      description: Record not found
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Conflict:
+      description: The requested action conflicts with the current record state
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
   schemas:
     HealthStatus:
       type: object
@@ -33,4 +556,292 @@ components:
           type: string
       required:
         - status
+    Error:
+      type: object
+      properties: { error: { type: string } }
+      required: [error]
+    Profile:
+      type: object
+      properties:
+        id: { type: string }
+        displayName: { type: string }
+        email: { type: ["string", "null"] }
+        currency: { type: string, enum: [INR] }
+        timezone: { type: string }
+        challengeStartDate: { type: string, format: date }
+        challengeDurationDays: { type: integer }
+        startingBudgetPaise: { type: integer }
+        plannedIncomePaise: { type: integer }
+        dailyDiscretionaryTargetPaise: { type: ["integer", "null"] }
+        savingsGoalPaise: { type: integer }
+        emergencyReserveTargetPaise: { type: integer }
+        onboardingCompleted: { type: boolean }
+      required: [id, displayName, currency, timezone, challengeStartDate, challengeDurationDays, startingBudgetPaise, plannedIncomePaise, dailyDiscretionaryTargetPaise, savingsGoalPaise, emergencyReserveTargetPaise, onboardingCompleted]
+    ProfileUpdate:
+      type: object
+      properties:
+        displayName: { type: string, minLength: 1, maxLength: 80 }
+        timezone: { type: string, minLength: 1, maxLength: 64 }
+        challengeStartDate: { type: string, format: date }
+        challengeDurationDays: { type: integer, minimum: 1, maximum: 366 }
+        startingBudgetPaise: { type: integer, minimum: 0, maximum: 100000000000 }
+        plannedIncomePaise: { type: integer, minimum: 0, maximum: 100000000000 }
+        dailyDiscretionaryTargetPaise: { type: ["integer", "null"], minimum: 0, maximum: 100000000000 }
+        savingsGoalPaise: { type: integer, minimum: 0, maximum: 100000000000 }
+        emergencyReserveTargetPaise: { type: integer, minimum: 0, maximum: 100000000000 }
+        onboardingCompleted: { type: boolean }
+    Transaction:
+      type: object
+      properties:
+        id: { type: integer }
+        type: { type: string, enum: [income, expense, refund, adjustment] }
+        amountPaise: { type: integer }
+        category: { type: string }
+        description: { type: string }
+        transactionDate: { type: string, format: date }
+        isEssential: { type: boolean }
+        createdAt: { type: string, format: date-time }
+      required: [id, type, amountPaise, category, description, transactionDate, isEssential, createdAt]
+    TransactionInput:
+      type: object
+      properties:
+        type: { type: string, enum: [income, expense, refund, adjustment] }
+        amountPaise: { type: integer, minimum: 1, maximum: 100000000000 }
+        category: { type: string, minLength: 1, maxLength: 60 }
+        description: { type: string, maxLength: 240 }
+        transactionDate: { type: string, format: date }
+        isEssential: { type: boolean }
+      required: [type, amountPaise, category, transactionDate, isEssential]
+    TransactionUpdate:
+      type: object
+      properties:
+        type: { type: string, enum: [income, expense, refund, adjustment] }
+        amountPaise: { type: integer, minimum: 1, maximum: 100000000000 }
+        category: { type: string, minLength: 1, maxLength: 60 }
+        description: { type: string, maxLength: 240 }
+        transactionDate: { type: string, format: date }
+        isEssential: { type: boolean }
+    BudgetCategory:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        spendingLimitPaise: { type: integer }
+        isEssential: { type: boolean }
+        spentPaise: { type: integer }
+      required: [id, name, spendingLimitPaise, isEssential, spentPaise]
+    BudgetCategoryInput:
+      type: object
+      properties:
+        name: { type: string, minLength: 1, maxLength: 60 }
+        spendingLimitPaise: { type: integer, minimum: 0, maximum: 100000000000 }
+        isEssential: { type: boolean }
+      required: [name, spendingLimitPaise, isEssential]
+    BudgetCategoryUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 1, maxLength: 60 }
+        spendingLimitPaise: { type: integer, minimum: 0, maximum: 100000000000 }
+        isEssential: { type: boolean }
+    SavingsGoal:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        targetAmountPaise: { type: integer }
+        targetDate: { type: ["string", "null"], format: date }
+        currentContributionPaise: { type: integer }
+        createdAt: { type: string, format: date-time }
+      required: [id, name, targetAmountPaise, currentContributionPaise, createdAt]
+    SavingsGoalInput:
+      type: object
+      properties:
+        name: { type: string, minLength: 1, maxLength: 100 }
+        targetAmountPaise: { type: integer, minimum: 1, maximum: 100000000000 }
+        targetDate: { type: ["string", "null"], format: date }
+      required: [name, targetAmountPaise]
+    SavingsGoalUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 1, maxLength: 100 }
+        targetAmountPaise: { type: integer, minimum: 1, maximum: 100000000000 }
+        targetDate: { type: ["string", "null"], format: date }
+    SavingsContributionInput:
+      type: object
+      properties:
+        amountPaise: { type: integer, minimum: 1, maximum: 100000000000 }
+        contributionDate: { type: string, format: date }
+        note: { type: string, maxLength: 160 }
+      required: [amountPaise, contributionDate]
+    Commitment:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        category: { type: string }
+        amountPaise: { type: integer }
+        dueDate: { type: string, format: date }
+        recurrenceType: { type: string, enum: [once, weekly, monthly, yearly] }
+        isEssential: { type: boolean }
+        status: { type: string, enum: [planned, paid, cancelled] }
+        paidTransactionId: { type: ["integer", "null"] }
+      required: [id, name, category, amountPaise, dueDate, recurrenceType, isEssential, status]
+    CommitmentInput:
+      type: object
+      properties:
+        name: { type: string, minLength: 1, maxLength: 100 }
+        category: { type: string, minLength: 1, maxLength: 60 }
+        amountPaise: { type: integer, minimum: 1, maximum: 100000000000 }
+        dueDate: { type: string, format: date }
+        recurrenceType: { type: string, enum: [once, weekly, monthly, yearly] }
+        isEssential: { type: boolean }
+      required: [name, category, amountPaise, dueDate, recurrenceType, isEssential]
+    CommitmentUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 1, maxLength: 100 }
+        category: { type: string, minLength: 1, maxLength: 60 }
+        amountPaise: { type: integer, minimum: 1, maximum: 100000000000 }
+        dueDate: { type: string, format: date }
+        recurrenceType: { type: string, enum: [once, weekly, monthly, yearly] }
+        isEssential: { type: boolean }
+        status: { type: string, enum: [planned, cancelled] }
+    Subscription:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        amountPaise: { type: integer }
+        billingFrequency: { type: string, enum: [weekly, monthly, quarterly, yearly] }
+        nextBillingDate: { type: string, format: date }
+        category: { type: string }
+        status: { type: string, enum: [active, paused, cancelled] }
+      required: [id, name, amountPaise, billingFrequency, nextBillingDate, category, status]
+    SubscriptionInput:
+      type: object
+      properties:
+        name: { type: string, minLength: 1, maxLength: 100 }
+        amountPaise: { type: integer, minimum: 1, maximum: 100000000000 }
+        billingFrequency: { type: string, enum: [weekly, monthly, quarterly, yearly] }
+        nextBillingDate: { type: string, format: date }
+        category: { type: string, minLength: 1, maxLength: 60 }
+      required: [name, amountPaise, billingFrequency, nextBillingDate, category]
+    SubscriptionUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 1, maxLength: 100 }
+        amountPaise: { type: integer, minimum: 1, maximum: 100000000000 }
+        billingFrequency: { type: string, enum: [weekly, monthly, quarterly, yearly] }
+        nextBillingDate: { type: string, format: date }
+        category: { type: string, minLength: 1, maxLength: 60 }
+        status: { type: string, enum: [active, paused, cancelled] }
+    ScenarioInput:
+      type: object
+      properties:
+        name: { type: string, minLength: 1, maxLength: 100 }
+        type: { type: string, enum: [purchase, unexpected_expense, income, new_subscription, cancel_subscription, savings_contribution, discretionary_change, delayed_purchase] }
+        amountPaise: { type: integer, minimum: 0, maximum: 100000000000 }
+        category: { type: string, maxLength: 60 }
+        description: { type: string, maxLength: 240 }
+        decisionDate: { type: string, format: date }
+        isEssential: { type: boolean }
+        billingFrequency: { type: ["string", "null"], enum: [weekly, monthly, quarterly, yearly, null] }
+        subscriptionId: { type: ["integer", "null"] }
+        goalId: { type: ["integer", "null"] }
+      required: [name, type, amountPaise, decisionDate, isEssential]
+    ScenarioResult:
+      type: object
+      properties:
+        baseline: { $ref: "#/components/schemas/FinancialSnapshot" }
+        projected: { $ref: "#/components/schemas/FinancialSnapshot" }
+        changePaise: { type: integer }
+        explanation: { type: array, items: { type: string } }
+      required: [baseline, projected, changePaise, explanation]
+    Scenario:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        type: { type: string }
+        assumptions: { $ref: "#/components/schemas/ScenarioInput" }
+        result: { $ref: "#/components/schemas/ScenarioResult" }
+        status: { type: string, enum: [saved, applied] }
+        createdAt: { type: string, format: date-time }
+      required: [id, name, type, assumptions, result, status, createdAt]
+    ScenarioUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 1, maxLength: 100 }
+    AppliedScenario:
+      type: object
+      properties:
+        id: { type: integer }
+        status: { type: string, enum: [applied] }
+        message: { type: string }
+        transactionId: { type: ["integer", "null"] }
+        commitmentId: { type: ["integer", "null"] }
+        subscriptionId: { type: ["integer", "null"] }
+        goalId: { type: ["integer", "null"] }
+      required: [id, status, message, transactionId, commitmentId, subscriptionId, goalId]
+    FinancialSnapshot:
+      type: object
+      properties:
+        currentBalancePaise: { type: integer }
+        spendableBalancePaise: { type: integer }
+        dailyAllowancePaise: { type: integer }
+        savingsProgressPaise: { type: integer }
+        commitmentCoverage: { type: number }
+        projectedMonthEndBalancePaise: { type: integer }
+        risk: { type: string, enum: [low, moderate, high, critical] }
+        healthScore: { type: integer, minimum: 0, maximum: 100 }
+        riskFactors: { type: array, items: { type: string } }
+      required: [currentBalancePaise, spendableBalancePaise, dailyAllowancePaise, savingsProgressPaise, commitmentCoverage, projectedMonthEndBalancePaise, risk, healthScore, riskFactors]
+    ForecastDay:
+      type: object
+      properties:
+        date: { type: string, format: date }
+        balancePaise: { type: integer }
+        label: { type: string }
+      required: [date, balancePaise, label]
+    Dashboard:
+      type: object
+      properties:
+        profile: { $ref: "#/components/schemas/Profile" }
+        snapshot: { $ref: "#/components/schemas/FinancialSnapshot" }
+        incomePaise: { type: integer }
+        expensesPaise: { type: integer }
+        daysRemaining: { type: integer }
+        savingsTargetPaise: { type: integer }
+        upcomingCommitments: { type: array, items: { $ref: "#/components/schemas/Commitment" } }
+        recentTransactions: { type: array, items: { $ref: "#/components/schemas/Transaction" } }
+        forecast: { type: array, items: { $ref: "#/components/schemas/ForecastDay" } }
+        categorySpending: { type: array, items: { $ref: "#/components/schemas/CategorySpending" } }
+        insights: { type: array, items: { type: string } }
+      required: [profile, snapshot, incomePaise, expensesPaise, daysRemaining, savingsTargetPaise, upcomingCommitments, recentTransactions, forecast, categorySpending, insights]
+    CategorySpending:
+      type: object
+      properties:
+        category: { type: string }
+        amountPaise: { type: integer }
+      required: [category, amountPaise]
+    Notification:
+      type: object
+      properties:
+        id: { type: integer }
+        type: { type: string }
+        title: { type: string }
+        message: { type: string }
+        severity: { type: string, enum: [info, warning, critical] }
+        isRead: { type: boolean }
+        createdAt: { type: string, format: date-time }
+      required: [id, type, title, message, severity, isRead, createdAt]
+    FinancialExport:
+      type: object
+      properties:
+        profile: { $ref: "#/components/schemas/Profile" }
+        transactions: { type: array, items: { $ref: "#/components/schemas/Transaction" } }
+        goals: { type: array, items: { $ref: "#/components/schemas/SavingsGoal" } }
+        commitments: { type: array, items: { $ref: "#/components/schemas/Commitment" } }
+        subscriptions: { type: array, items: { $ref: "#/components/schemas/Subscription" } }
+      required: [profile, transactions, goals, commitments, subscriptions]
 

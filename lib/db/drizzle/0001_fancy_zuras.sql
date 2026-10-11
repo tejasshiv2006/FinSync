@@ -1,0 +1,1 @@
+ALTER TABLE "finsync_financial_profiles" ADD COLUMN "daily_discretionary_target_paise" bigint;

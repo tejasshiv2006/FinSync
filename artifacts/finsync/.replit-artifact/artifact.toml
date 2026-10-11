@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "FinSync"
+description = "Personal finance planning and budget simulation for students and young professionals. Track a ₹10,000 challenge, manage commitments, and simulate decisions against a server-calculated forecast."
+version = "1.0.0"
+id = "artifacts/finsync"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19073
+
+[services.development]
+run = "pnpm --filter @workspace/finsync run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/finsync", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/finsync/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19073"
+BASE_PATH = "/"
